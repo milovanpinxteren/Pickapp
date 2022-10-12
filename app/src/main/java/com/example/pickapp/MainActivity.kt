@@ -1,19 +1,15 @@
 package com.example.pickapp
 
-import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.budiyev.android.codescanner.AutoFocusMode
-import com.budiyev.android.codescanner.CodeScanner
-import com.budiyev.android.codescanner.DecodeCallback
-import com.budiyev.android.codescanner.ErrorCallback
-import com.budiyev.android.codescanner.ScanMode
+import com.budiyev.android.codescanner.*
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 private const val CAMERA_REQUEST_CODE = 101
 
@@ -44,9 +40,11 @@ class MainActivity : AppCompatActivity() {
             decodeCallback = DecodeCallback {
                 runOnUiThread {
                     tv_textView.text = it.text
-                    val intent = Intent(this@MainActivity, OrderPickActivity::class.java)
                     val order = it.text
-                    OrderPickActivity(intent)
+//                    val intent = Intent(this@MainActivity, OrderPickActivity::class.java)
+//                    intent.putExtra("message_key", it.text)
+//                    OrderPickActivity(intent)
+                    startOrderPick(order)
                 }
             }
 
@@ -57,9 +55,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        scanner_view.setOnClickListener{
-//            codeScanner.startPreview()
-//        }
+        scanner_view.setOnClickListener{
+            codeScanner.startPreview()
+        }
+    }
+
+    private fun startOrderPick(order: String?) {
+        Log.d("Order", order.toString())
+        var fullOrder = order.toString()
+        var lines = fullOrder.lines()
+        val orderMap = mutableMapOf<String, String>()
+        lines.forEachIndexed { index, orderpick ->
+            Log.d("LOOP", orderpick)
+            orderMap[index.toString()] = orderpick
+        }
+        Log.d("Ordermap", orderMap.toString())
+
+
     }
 
     override fun onResume() {
